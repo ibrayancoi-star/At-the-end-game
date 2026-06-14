@@ -1,0 +1,86 @@
+; Archivo de configuración del proyecto Godot.
+;
+; Este archivo lo gestiona normalmente el editor de Godot, pero lo dejamos
+; preparado a mano con la configuración base que pediste. Cuando abras el
+; proyecto en Godot 4.6, el editor lo leerá tal cual.
+;
+; config_version=5 -> formato de proyecto de Godot 4.x
+
+config_version=5
+
+[application]
+
+config/name="At the end game"
+config/description="Juego 2D top-down de recolección y crafteo con economía dirigida por jugadores."
+; Escena que se ejecuta al pulsar Play (F5).
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.6", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[autoload]
+
+; Los autoloads son singletons: nodos globales accesibles desde cualquier
+; script por su nombre (Database, GameState). El "*" significa "activado".
+; ORDEN IMPORTANTE: Database va primero porque GameState/Inventory consultan
+; definiciones de items a través de él.
+Database="*res://scripts/autoload/database.gd"
+GameState="*res://scripts/autoload/game_state.gd"
+
+[display]
+
+; Resolución base de diseño. Pensamos el juego a 640x360 (16:9) y dejamos
+; que se escale a la ventana real.
+window/size/viewport_width=640
+window/size/viewport_height=360
+; stretch mode "canvas_items": escala el contenido 2D manteniendo nitidez,
+; ideal para top-down y para un futuro port a Android.
+window/stretch/mode="canvas_items"
+; aspect "expand": rellena la pantalla mostrando algo más de mundo en
+; pantallas con relación de aspecto distinta, en lugar de poner bandas negras.
+window/stretch/aspect="expand"
+
+[input]
+
+; --- Input Map: ACCIONES con nombre ---
+; Regla del proyecto: el código lee ACCIONES (move_up, interact...), NUNCA
+; teclas sueltas. Así podemos remapear teclas o añadir mando/táctil sin
+; tocar el código del jugador.
+;
+; Usamos "physical_keycode" (posición física de la tecla) en vez de
+; "keycode": así WASD funciona igual en teclados QWERTY, AZERTY, etc.
+
+move_up={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":87,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194320,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+move_down={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":83,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194322,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+move_left={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":65,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194319,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+move_right={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":68,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194321,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+interact={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":69,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":32,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+open_inventory={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":73,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}

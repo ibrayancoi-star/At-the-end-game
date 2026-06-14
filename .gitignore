@@ -1,0 +1,27 @@
+# === Godot 4 ===
+# Carpeta de caché/import del editor. Se regenera sola al abrir el proyecto.
+.godot/
+
+# Caché de assets importados (versiones antiguas de Godot).
+.import/
+
+# === Exportaciones / builds ===
+/build/
+/exports/
+*.exe
+*.pck
+*.zip
+*.dmg
+*.apk
+*.aab
+
+# === Cosas del sistema operativo / editores ===
+.DS_Store
+Thumbs.db
+*.tmp
+*~
+
+# === Secretos (cuando llegue el backend) ===
+# Nunca subas claves ni .env al repositorio.
+.env
+*.key

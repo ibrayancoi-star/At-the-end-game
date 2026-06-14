@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/resource_node.tscn" id="2"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1")]
+position = Vector2(320, 180)
+
+[node name="Arbol" parent="." instance=ExtResource("2")]
+position = Vector2(470, 140)
+
+[node name="Roca" parent="." instance=ExtResource("2")]
+modulate = Color(0.7, 0.7, 0.75, 1)
+position = Vector2(180, 240)
+yields_item_id = "mineral"
+tool_type = "pickaxe"
+
+[node name="Planta" parent="." instance=ExtResource("2")]
+modulate = Color(0.55, 0.8, 0.4, 1)
+position = Vector2(420, 290)
+yields_item_id = "fibra"
+tool_type = "none"
