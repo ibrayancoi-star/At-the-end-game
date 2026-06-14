@@ -1,10 +1,10 @@
-; Archivo de configuración del proyecto Godot.
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
 ;
-; Este archivo lo gestiona normalmente el editor de Godot, pero lo dejamos
-; preparado a mano con la configuración base que pediste. Cuando abras el
-; proyecto en Godot 4.6, el editor lo leerá tal cual.
-;
-; config_version=5 -> formato de proyecto de Godot 4.x
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
@@ -12,42 +12,23 @@ config_version=5
 
 config/name="At the end game"
 config/description="Juego 2D top-down de recolección y crafteo con economía dirigida por jugadores."
-; Escena que se ejecuta al pulsar Play (F5).
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-; Los autoloads son singletons: nodos globales accesibles desde cualquier
-; script por su nombre (Database, GameState). El "*" significa "activado".
-; ORDEN IMPORTANTE: Database va primero porque GameState/Inventory consultan
-; definiciones de items a través de él.
 Database="*res://scripts/autoload/database.gd"
 GameState="*res://scripts/autoload/game_state.gd"
 
 [display]
 
-; Resolución base de diseño. Pensamos el juego a 640x360 (16:9) y dejamos
-; que se escale a la ventana real.
 window/size/viewport_width=640
 window/size/viewport_height=360
-; stretch mode "canvas_items": escala el contenido 2D manteniendo nitidez,
-; ideal para top-down y para un futuro port a Android.
 window/stretch/mode="canvas_items"
-; aspect "expand": rellena la pantalla mostrando algo más de mundo en
-; pantallas con relación de aspecto distinta, en lugar de poner bandas negras.
 window/stretch/aspect="expand"
 
 [input]
-
-; --- Input Map: ACCIONES con nombre ---
-; Regla del proyecto: el código lee ACCIONES (move_up, interact...), NUNCA
-; teclas sueltas. Así podemos remapear teclas o añadir mando/táctil sin
-; tocar el código del jugador.
-;
-; Usamos "physical_keycode" (posición física de la tecla) en vez de
-; "keycode": así WASD funciona igual en teclados QWERTY, AZERTY, etc.
 
 move_up={
 "deadzone": 0.5,

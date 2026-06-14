@@ -54,7 +54,7 @@ func add_item(item_id: String, amount: int = 1) -> int:
 				break
 			var slot = slots[i]
 			if slot != null and slot.item_id == item_id and slot.quantity < stack_limit:
-				var space := stack_limit - slot.quantity
+				var space: int = stack_limit - slot.quantity
 				var moved: int = min(space, remaining)
 				slot.quantity += moved
 				remaining -= moved
