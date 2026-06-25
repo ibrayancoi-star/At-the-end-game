@@ -42,8 +42,8 @@ func add_item(item_id: String, amount: int = 1) -> int:
 		push_error("Inventory.add_item: item desconocido '%s'" % item_id)
 		return amount
 
-	var remaining := amount
-	var is_tool := item is ToolData
+	var remaining: int = amount
+	var is_tool: bool = item is ToolData
 	# Las herramientas no apilan: cada una ocupa su hueco con su durabilidad.
 	var stack_limit: int = 1 if is_tool else item.max_stack
 
@@ -85,7 +85,7 @@ func remove_item(item_id: String, amount: int = 1) -> bool:
 	if get_count(item_id) < amount:
 		return false
 
-	var remaining := amount
+	var remaining: int = amount
 	# Recorremos de atrás hacia delante para vaciar huecos de forma limpia.
 	for i in range(slots.size() - 1, -1, -1):
 		if remaining <= 0:
@@ -104,7 +104,7 @@ func remove_item(item_id: String, amount: int = 1) -> bool:
 
 ## ¿Cuántas unidades de este item hay en total (sumando todos los huecos)?
 func get_count(item_id: String) -> int:
-	var total := 0
+	var total: int = 0
 	for slot in slots:
 		if slot != null and slot.item_id == item_id:
 			total += slot.quantity
@@ -138,7 +138,7 @@ func wear_tool(slot_index: int, amount: int) -> bool:
 		return false
 
 	slot.durability -= amount
-	var broke := false
+	var broke: bool = false
 	if slot.durability <= 0:
 		slots[slot_index] = null  # la herramienta se ha roto
 		broke = true
