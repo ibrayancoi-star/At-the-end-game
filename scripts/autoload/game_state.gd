@@ -22,8 +22,11 @@ var gold: int = 0
 
 
 func _ready() -> void:
-	# Creamos el inventario al arrancar. 20 huecos para empezar.
-	inventory = Inventory.new(20)
+	# Creamos el inventario al arrancar (28 slots, ConstantsCore.INVENTORY_SLOTS).
+	inventory = Inventory.new()
+	# Cableamos el reloj global: GameState (Node) conecta la señal de ticks a la
+	# purga de overflow del inventario (que es lógica pura y no toca el árbol).
+	CoreTimeManager.tick_elapsed.connect(inventory.purge_expired_overflow)
 
 
 ## Añade oro (un GRIFO de la economía: así entra valor al juego).

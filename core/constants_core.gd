@@ -1,75 +1,34 @@
 extends Node
 ## ConstantsCore (autoload / singleton) — CONSTANTES CENTRALES DE SIMULACIÓN.
 ##
-## Fuente única de verdad para todos los valores numéricos que rigen la
-## simulación del servidor. Ningún sistema debe hardcodear estos valores:
-## siempre referir a ConstantsCore.NOMBRE_CONSTANTE.
+## Fuente única de verdad para los valores numéricos que rigen la simulación.
+## Ningún sistema debe hardcodear estos valores: siempre referir a
+## ConstantsCore.NOMBRE_CONSTANTE.
 ##
-## Registrado como autoload en project.godot.
-## Acceso global: ConstantsCore.STAMINA_MAX, etc.
+## Registrado como autoload en project.godot (el PRIMERO: el resto depende de él).
+## Acceso global: ConstantsCore.TICK_DURATION, etc.
+##
+## ORGANIZACIÓN (ver ADR-003 "Híbrido Controlado" en docs/architecture):
+##   - "FASE 1 ACTIVA": constantes en uso por el juego single-player actual.
+##   - "DIFERIDO (MMO)": constantes que solo usa el código de systems/_deferred/
+##     (party, RPC, estamina...). Se conservan para que ese código compile, pero
+##     NO forman parte del alcance de la Fase 1.
 
 
 # =============================================================================
-# TICK ENGINE
+# FASE 1 ACTIVA
 # =============================================================================
+
+# --- Motor de ticks ---
 
 ## Duración de un Game Tick en segundos. Regla del mundo: inmutable en runtime.
 const TICK_DURATION: float = 0.6
 
+## Número de "cubos" para el Tick Slicing (reparto de carga entre ticks).
+## Una entidad procesa su lógica pesada 1 de cada TICK_SLICE_BUCKETS ticks.
+const TICK_SLICE_BUCKETS: int = 10
 
-# =============================================================================
-# STAMINA
-# =============================================================================
-
-## Estamina máxima base de cualquier jugador.
-const STAMINA_MAX: float = 100.0
-
-## Regeneración de estamina en reposo (aplicada cada 2 ticks = 1.2s).
-const STAMINA_REGEN_REPOSO: float = 5.0
-
-## Regeneración de estamina en movimiento (aplicada cada 2 ticks = 1.2s).
-const STAMINA_REGEN_MOVIMIENTO: float = 1.0
-
-
-# =============================================================================
-# COSTOS BASE DE ACCIONES (en estamina)
-# =============================================================================
-
-## Costo base de estamina por acción de crafteo.
-const COST_BASE_CRAFTEO: float = 10.0
-
-## Costo base de estamina por acción de desguace.
-const COST_BASE_DESGUACE: float = 8.0
-
-## Costo base de estamina por escaneo de campo.
-const COST_BASE_ESCANEO_CAMPO: float = 5.0
-
-
-# =============================================================================
-# MERCENARY — PENALIZACIONES EN SOLITARIO
-# =============================================================================
-
-## Multiplicador de costo de estamina para Mercenarios jugando solos (+25%).
-const MERCENARY_SOLO_STAMINA_PENALTY: float = 1.25
-
-## Multiplicador de velocidad de tick para Mercenarios jugando solos (+25%).
-## Las acciones del Mercenario solitario tardan un 25% más en ticks.
-const MERCENARY_SOLO_TICK_SPEED_MODIFIER: float = 1.25
-
-
-# =============================================================================
-# PVP
-# =============================================================================
-
-## Duración del Combat Tag en ticks (20 ticks = 12 segundos reales).
-## Mientras el tag está activo, el jugador no puede desconectarse de forma
-## segura ni usar ciertas interacciones protegidas.
-const PVP_COMBAT_TAG_DURATION_TICKS: int = 20
-
-
-# =============================================================================
-# INVENTARIO
-# =============================================================================
+# --- Inventario ---
 
 ## Número fijo de slots del inventario de cada jugador.
 const INVENTORY_SLOTS: int = 28
@@ -81,25 +40,39 @@ const SCRAP_STACK_MAX: int = 5
 ## 500 ticks × 0.6s = 300 segundos = 5 minutos.
 const OVERFLOW_EXPIRY_TICKS: int = 500
 
+# --- Reparación (sumidero económico) ---
 
-# =============================================================================
-# REPARACIÓN
-# =============================================================================
-
-## Fracción de durabilidad máxima absoluta que se pierde permanentemente
-## por cada reparación exitosa. Irreversible.
+## Fracción de durabilidad máxima absoluta que se pierde permanentemente por
+## cada reparación exitosa. Irreversible. (0.10 = pierde el 10%; equivale a
+## conservar el 90% — descartamos el nombre alternativo DURABILITY_REDUCTION_FACTOR
+## para no duplicar el concepto, ver ADR-003.)
 const REPAIR_MAX_DURABILITY_PENALTY: float = 0.10
 
+## Multiplicador base del coste de reparación. 1.0 = sin modificación.
+## Punto de ajuste para futuros eventos económicos o dificultad.
+const REPAIR_COST_MODIFIER: float = 1.0
+
 
 # =============================================================================
-# PARTY — INVARIANTE DE ESTADO GLOBAL PROYECTADO
+# DIFERIDO (MMO) — usado solo por systems/_deferred/ (no Fase 1, ver ADR-003)
 # =============================================================================
 
-## Máximo de miembros en una party mixta (Facción + Mercenarios).
+# --- Estamina ---
+const STAMINA_MAX: float = 100.0
+const STAMINA_REGEN_REPOSO: float = 5.0           ## cada 2 ticks (1.2s)
+const STAMINA_REGEN_MOVIMIENTO: float = 1.0       ## cada 2 ticks (1.2s)
+const COST_BASE_CRAFTEO: float = 10.0
+const COST_BASE_DESGUACE: float = 8.0
+const COST_BASE_ESCANEO_CAMPO: float = 5.0
+
+# --- Mercenario en solitario ---
+const MERCENARY_SOLO_STAMINA_PENALTY: float = 1.25
+const MERCENARY_SOLO_TICK_SPEED_MODIFIER: float = 1.25
+
+# --- PvP ---
+const PVP_COMBAT_TAG_DURATION_TICKS: int = 20     ## 12 segundos reales
+
+# --- Party (límites por composición de facciones) ---
 const PARTY_MAX_MIXED: int = 4
-
-## Máximo de miembros en una party de puros Mercenarios.
 const PARTY_MAX_PURE_MERCENARY: int = 5
-
-## Máximo de miembros en una party de pura Facción (solo PACTO o solo RESISTENCIA).
 const PARTY_MAX_PURE_FACTION: int = 6
