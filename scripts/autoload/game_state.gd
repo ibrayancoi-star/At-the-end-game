@@ -28,10 +28,16 @@ var gold: int = 0
 ## La selección real se hará en la UI; de momento se fija con set_player_faction.
 var player_faction: int = -1
 
+## Habilidades del jugador (nivel/XP por habilidad; ver systems/skills/skill_set.gd).
+## En esta fase solo "ingenieria" tiene mecánica; el resto están declaradas.
+var skills: SkillSet
+
 
 func _ready() -> void:
 	# Creamos el inventario al arrancar (28 slots, ConstantsCore.INVENTORY_SLOTS).
 	inventory = Inventory.new()
+	# Habilidades del jugador (todas empiezan a nivel 0 / sin XP).
+	skills = SkillSet.new()
 	# Cableamos el reloj global: GameState (Node) conecta la señal de ticks a la
 	# purga de overflow del inventario (que es lógica pura y no toca el árbol).
 	CoreTimeManager.tick_elapsed.connect(inventory.purge_expired_overflow)

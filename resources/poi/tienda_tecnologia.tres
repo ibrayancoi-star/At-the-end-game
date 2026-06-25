@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PoiLootData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/poi_loot_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "tienda_tecnologia"
+display_name = "Tienda de tecnología"
+base_item_id = "electrodomestico"
+quality_min = 35
+quality_max = 70

@@ -12,20 +12,30 @@ extends Node
 const ITEMS_PATH := "res://resources/items/"
 const RECIPES_PATH := "res://resources/recipes/"
 const FACTIONS_PATH := "res://resources/factions/"
+const SKILLS_PATH := "res://resources/skills/"
+const SALVAGE_PATH := "res://resources/salvage/"
+const POI_PATH := "res://resources/poi/"
 
 # Diccionarios internos: id -> definición. El "_" inicial es una convención
 # para indicar "privado, no lo toques desde fuera; usa las funciones get_*".
 var _items: Dictionary = {}
 var _recipes: Dictionary = {}
 var _factions: Dictionary = {}
+var _skills: Dictionary = {}
+var _salvage: Dictionary = {}
+var _pois: Dictionary = {}
 
 
 func _ready() -> void:
 	_load_folder(ITEMS_PATH, _items)
 	_load_folder(RECIPES_PATH, _recipes)
 	_load_folder(FACTIONS_PATH, _factions)
-	print("Database lista: %d items, %d recetas, %d facciones." % [
-		_items.size(), _recipes.size(), _factions.size()
+	_load_folder(SKILLS_PATH, _skills)
+	_load_folder(SALVAGE_PATH, _salvage)
+	_load_folder(POI_PATH, _pois)
+	print("Database lista: %d items, %d recetas, %d facciones, %d habilidades, %d salvage, %d POIs." % [
+		_items.size(), _recipes.size(), _factions.size(),
+		_skills.size(), _salvage.size(), _pois.size()
 	])
 
 
@@ -73,3 +83,23 @@ func get_faction(id: String) -> FactionData:
 ## Devuelve todas las facciones (útil para la futura pantalla de selección).
 func all_factions() -> Array:
 	return _factions.values()
+
+
+## Devuelve la definición de una habilidad por su id, o null si no existe.
+func get_skill(id: String) -> SkillData:
+	return _skills.get(id)
+
+
+## Devuelve todas las habilidades (útil para la futura UI de habilidades).
+func all_skills() -> Array:
+	return _skills.values()
+
+
+## Devuelve la tabla de desmontaje (SalvageData) de un item base, o null.
+func get_salvage(base_item_id: String) -> SalvageData:
+	return _salvage.get(base_item_id)
+
+
+## Devuelve la tabla de loot (PoiLootData) de un POI por su id, o null.
+func get_poi(id: String) -> PoiLootData:
+	return _pois.get(id)

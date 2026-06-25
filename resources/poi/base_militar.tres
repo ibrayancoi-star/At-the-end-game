@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PoiLootData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/poi_loot_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "base_militar"
+display_name = "Base militar"
+base_item_id = "arma_rota"
+quality_min = 70
+quality_max = 100

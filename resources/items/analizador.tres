@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ToolData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "analizador"
+display_name = "Analizador"
+description = "Artefacto crafteado que permite analizar chatarra sin depender del nivel de Ingeniería ni de una máquina de escaneo. Se desgasta con el uso."
+max_stack = 1
+category = "herramienta"
+tool_type = "analisis"
+max_durability = 40
+wear_per_use = 1
+gather_bonus = 0
