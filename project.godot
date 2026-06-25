@@ -20,7 +20,6 @@ config/icon="res://icon.svg"
 
 ConstantsCore="*res://core/constants_core.gd"
 CoreTimeManager="*res://core/time_manager.gd"
-TimeManager="*res://scripts/autoload/time_manager.gd"
 Database="*res://scripts/autoload/database.gd"
 GameState="*res://scripts/autoload/game_state.gd"
 

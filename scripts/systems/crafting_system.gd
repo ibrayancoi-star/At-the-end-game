@@ -21,17 +21,30 @@ static func can_craft(recipe: RecipeData, inventory: Inventory) -> bool:
 	return true
 
 
-## Ejecuta el crafteo: consume los ingredientes y entrega el resultado.
-## Es TODO O NADA: si falta algo, no toca el inventario y devuelve false.
+## Ejecuta el crafteo de forma ATÓMICA (anti-duping): o se completa entero o el
+## inventario queda EXACTAMENTE como estaba. Devuelve true si se craftéo.
+##
+## Usa una transacción del inventario: si algo falla a mitad (falta un
+## ingrediente, o no cabe el resultado), se hace rollback al snapshot inicial.
+## Esto cierra el exploit clásico de duplicación al interrumpir la operación.
 static func craft(recipe: RecipeData, inventory: Inventory) -> bool:
 	if not can_craft(recipe, inventory):
 		return false
 
-	# Consumir los ingredientes.
-	# SUMIDERO económico: estos materiales SALEN de la economía para siempre.
-	for item_id in recipe.ingredients:
-		inventory.remove_item(item_id, recipe.ingredients[item_id])
+	inventory.begin_transaction()
 
-	# Entregar el resultado.
-	inventory.add_item(recipe.output_item_id, recipe.output_quantity)
+	# Consumir ingredientes (SUMIDERO: salen de la economía para siempre).
+	for item_id in recipe.ingredients:
+		if not inventory.remove_item(item_id, recipe.ingredients[item_id]):
+			inventory.rollback_transaction()
+			return false
+
+	# Entregar el resultado SOLO en slots principales (sin overflow): si no cabe,
+	# se revierte todo y el crafteo no ocurre (el jugador debe hacer hueco).
+	var leftover: int = inventory.add_item(recipe.output_item_id, recipe.output_quantity, false)
+	if leftover > 0:
+		inventory.rollback_transaction()
+		return false
+
+	inventory.commit_transaction()
 	return true

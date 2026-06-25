@@ -50,14 +50,29 @@ func _on_tick_timeout() -> void:
 # =============================================================================
 
 ## Determina si una entidad debe procesarse en este tick específico.
-## Divide las entidades en 10 sub-grupos basándose en su ID.
-## Útil para distribuir operaciones costosas (regeneración de estamina,
-## degradación de artefactos, expiración de overflow) entre ticks.
+## Reparte las entidades en TICK_SLICE_BUCKETS sub-grupos para suavizar la carga
+## de operaciones costosas (degradación, regeneración, expiración) entre ticks.
 ##
-## Ejemplo: si entity_id=23 y tick_index=3 → (23 % 10) == (3 % 10) → true.
-## Esa entidad solo se procesa en ticks cuyo índice termine en 3.
+## POR QUÉ HASH (no `entity_id % N` directo): los Peer IDs de la MultiplayerAPI
+## de Godot NO son secuenciales (p. ej. 1, 1234567890, ...). Un módulo directo
+## los agruparía mal y dejaría cubos casi vacíos y otros saturados. Aplicar un
+## hash entero determinista ANTES del módulo garantiza una distribución
+## homogénea (~100/N % por cubo) sea cual sea el patrón del ID.
 static func is_entity_tick(entity_id: int, tick_index: int) -> bool:
-	return (entity_id % 10) == (tick_index % 10)
+	var buckets: int = ConstantsCore.TICK_SLICE_BUCKETS
+	if buckets <= 0:
+		return true  # sin slicing: procesar siempre
+	return (_hash_id(entity_id) % buckets) == (tick_index % buckets)
+
+
+## Hash entero determinista (mezcla multiplicativa estilo Knuth + fold de bits).
+## Bien distribuido incluso para IDs dispersos. Devuelve un entero no negativo.
+static func _hash_id(value: int) -> int:
+	var x: int = value
+	x = (x ^ (x >> 16)) * 0x45d9f3b
+	x = (x ^ (x >> 16)) * 0x45d9f3b
+	x = x ^ (x >> 16)
+	return absi(x)
 
 
 # =============================================================================

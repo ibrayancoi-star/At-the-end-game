@@ -59,12 +59,13 @@ var _locked_slots_snapshot: Dictionary = {}
 func _ready() -> void:
 	_initialize_slots()
 	# Conectar al reloj del servidor para purgar overflow expirado.
-	if Engine.has_singleton("CoreTimeManager") or has_node("/root/CoreTimeManager"):
-		var time_mgr: Node = get_node_or_null("/root/CoreTimeManager")
-		if time_mgr != null:
-			time_mgr.tick_elapsed.connect(_on_tick_elapsed)
-		else:
-			push_error("InventoryManager: CoreTimeManager no encontrado en el árbol.")
+	# NOTA: Engine.has_singleton() es para singletons de MOTOR (módulos C++), NO
+	# para autoloads GDScript. Los autoloads se comprueban por su nodo en /root.
+	var time_mgr: Node = get_node_or_null("/root/CoreTimeManager")
+	if time_mgr != null:
+		time_mgr.tick_elapsed.connect(_on_tick_elapsed)
+	else:
+		push_error("InventoryManager: CoreTimeManager no encontrado en el árbol.")
 
 
 ## Inicializa exactamente 28 slots vacíos.
