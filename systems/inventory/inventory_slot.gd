@@ -80,8 +80,10 @@ func is_empty() -> bool:
 func get_real_count() -> int:
 	if item_id == "":
 		return 0
-	# Chatarra no identificada: el conteo es el tamaño del array de metadatos.
-	if not is_identified and hidden_metadata_array.size() > 0:
+	# Chatarra (analizada o no): el conteo es el tamaño del array de metadatos.
+	# Importante: analizar marca is_identified=true pero NO rompe la pila, así que
+	# el conteo se sigue tomando del array mientras haya metadatos.
+	if hidden_metadata_array.size() > 0:
 		return hidden_metadata_array.size()
 	# Fungible o identificado único: el conteo es `quantity`.
 	return quantity

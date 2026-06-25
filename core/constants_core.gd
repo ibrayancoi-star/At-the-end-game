@@ -52,6 +52,32 @@ const REPAIR_MAX_DURABILITY_PENALTY: float = 0.10
 ## Punto de ajuste para futuros eventos económicos o dificultad.
 const REPAIR_COST_MODIFIER: float = 1.0
 
+# --- Habilidades (multi-skill, ver ADR-004 y docs/SYSTEM_FOUNDATION.md) ---
+
+## Nivel máximo de cualquier habilidad.
+const SKILL_MAX_LEVEL: int = 99
+
+## base_xp de la curva XP(N) = trunc(base_xp · N^1.5). Un jugador sin XP es nivel 0.
+const SKILL_XP_BASE: float = 100.0
+
+# --- Ingeniería inversa (escalado por habilidad; placeholders, balance TBD) ---
+
+## Nivel de Ingeniería que permite ANALIZAR (escanear) sin herramienta ni máquina.
+const ENGINEERING_ANALYSIS_MIN_LEVEL: int = 10
+
+## Ticks base de un análisis/escaneo (la ejecución temporizada está diferida).
+const ANALYSIS_BASE_TICKS: int = 3
+
+## Factor de durabilidad del objeto ensamblado a nivel 0 de ingeniería.
+## A nivel máximo el factor es 1.0 (se interpola linealmente por nivel).
+const ASSEMBLY_DURABILITY_MIN_FACTOR: float = 0.4
+
+## Ticks base de ensamblaje (a habilidad alta).
+const ASSEMBLY_BASE_TICKS: int = 5
+
+## Ticks EXTRA de ensamblaje a nivel 0 de ingeniería (decrecen con el nivel).
+const ASSEMBLY_TICKS_PENALTY_MAX: int = 10
+
 
 # =============================================================================
 # DIFERIDO (MMO) — usado solo por systems/_deferred/ (no Fase 1, ver ADR-003)
