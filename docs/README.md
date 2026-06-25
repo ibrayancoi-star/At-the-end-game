@@ -7,10 +7,10 @@ Este directorio actúa como la base de conocimiento indexable para **gbrain**, o
 ## Índice de Documentación
 
 ### 📖 [1. Narrativa y Lore](narrative/CAP_1_EMPATIA.md)
-* **[CAP_1_EMPATIA.md](narrative/CAP_1_EMPATIA.md)**: Detalla el lore fundacional de la Capa 1, cubriendo la Paradoja de la Empatía de la RNG (Racionamiento de Existencia), el Gran Apagón provocado por los ataques EMP sobre la infraestructura tecnológica, y el surgimiento de la facción de humanos Neuro-Sintonizados.
+* **[CAP_1_EMPATIA.md](narrative/CAP_1_EMPATIA.md)**: Lore fundacional de la Capa 1 (canon): el Cisma de la Sobreevolución (las IAs sintetizan emociones y entran en guerra civil) y el surgimiento de los tres bandos — **El Pacto** (surge primero, busca purgar a la humanidad corrupta), **La Resistencia** (IAs empáticas + humanos aliados) y **Los Mercenarios** (neutrales, versátiles).
 
 ### ⚙️ [2. Mecánicas y Sistemas](systems/ARTEFACT_TRAUMA.md)
-* **[ARTEFACT_TRAUMA.md](systems/ARTEFACT_TRAUMA.md)**: Describe las especificaciones de la mecánica de "Inestabilidad Emocional del Artefacto", abarcando el comportamiento del glitch de hardware por memoria volátil de la RNG, la tabla de penalizaciones por degradación de integridad y la lógica de simulación por ticks (picos de eficiencia y bloqueos).
+* **[ARTEFACT_TRAUMA.md](systems/ARTEFACT_TRAUMA.md)**: Describe las especificaciones de la mecánica de "Inestabilidad Emocional del Artefacto", abarcando el comportamiento del glitch de hardware por memoria volátil (eco emocional de las IAs del Cisma), la tabla de penalizaciones por degradación de integridad y la lógica de simulación por ticks (picos de eficiencia y bloqueos).
 
 ### 🏛️ [3. Decisiones y Arquitectura](architecture/DESIGN_DECISIONS.md)
 * **[DESIGN_DECISIONS.md](architecture/DESIGN_DECISIONS.md)**: Repositorio central de Decisiones de Arquitectura (ADR). Inicializado con:
