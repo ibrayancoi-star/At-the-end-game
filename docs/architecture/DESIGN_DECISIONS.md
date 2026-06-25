@@ -161,3 +161,67 @@ deliberada y justificada:
     documentada hasta la Fase MMO.
   * La unificación de los modelos fungible (A) y chatarra/certificación (B)
     sobre un único `InventorySlot` añade complejidad al slot.
+
+---
+
+## ADR-004: Canon de las 3 Facciones y cimientos del sistema de facción
+
+### Estado
+**Aceptado**
+
+### Contexto
+El lore tenía DOS versiones incompatibles del origen del conflicto:
+1. La de [CAP_1_EMPATIA.md](../narrative/CAP_1_EMPATIA.md) (versión antigua): una
+   **única IA** ("RNG / Red de Nutrición Global") que racionaba la existencia
+   humana, con humanos "Neuro-Sintonizados".
+2. La del DOCUMENTO MAESTRO y la dirección del proyecto: una **guerra civil entre
+   IAs** que sintetizaron emociones, con **tres bandos** (Pacto, Resistencia,
+   Mercenarios).
+
+Eran irreconciliables como origen del mundo. Además, el juego necesita una
+**identidad de facción** sobre la que construir colonias, party y especialidades.
+
+### Decisión
+1. **Canon = 3 bandos.** Se adopta la versión de guerra civil de IAs como lore
+   oficial. `CAP_1_EMPATIA.md` se **reescribe** a esa versión; la versión RNG
+   queda **OBSOLETA**. Las menciones a la "RNG" en `ARTEFACT_TRAUMA.md` y en el
+   índice se reinterpretan como el **eco emocional de las IAs del Cisma** (los
+   artefactos retienen directivas emocionales contradictorias de los dos bandos),
+   lo que da incluso mejor justificación a los glitches. ADR-001 se conserva como
+   registro histórico; su mención a "RNG" debe leerse bajo este canon.
+
+2. **Reglas de agrupación (party).** Las define el diseño y el servidor DEBE
+   bloquear cualquier composición distinta:
+   - Solo Pacto **o** solo Resistencia → máx **6** (`PARTY_MAX_PURE_FACTION`).
+   - Solo Mercenarios → máx **5** (`PARTY_MAX_PURE_MERCENARY`).
+   - Pacto + Mercenarios → máx **4** (`PARTY_MAX_MIXED`).
+   - Resistencia + Mercenarios → máx **4** (`PARTY_MAX_MIXED`).
+   - **Pacto + Resistencia juntos → PROHIBIDO** (bloqueo absoluto).
+   Estas reglas **ya existían** implementadas en `systems/_deferred/party_manager.gd`
+   (`evaluate_projected_state`) y en `ConstantsCore`. Se **extraen** a una capa
+   pura y testable `systems/party/party_rules.gd` (`class_name PartyRules`),
+   reutilizable tanto por el código single-player como por el `PartyManager`
+   diferido (red). La RED sigue diferida (ver ADR-003).
+
+3. **Perfiles de facción (datos).** Se modelan como `FactionData` (Resource) en
+   `resources/factions/*.tres`:
+   - Pacto y Resistencia: `is_main_faction=true`, **Combate + 1** habilidad extra,
+     campamentos de **mayor** capacidad.
+   - Mercenarios: `is_main_faction=false`, **Combate + 2** habilidades extra,
+     campamentos de **menor** capacidad.
+   Los números de `camp_capacity` son **placeholders sujetos a balance (TBD)**.
+
+4. **Identidad del jugador.** `GameState` guarda `player_faction` (single-player).
+   No se implementa aquí combate, árbol de habilidades ni gameplay de colonias:
+   esto es el CIMIENTO de datos/reglas/identidad.
+
+### Consecuencias
+* **Positivas**:
+  * Un único canon coherente; se elimina la contradicción de origen del mundo.
+  * Las reglas de party pasan a ser **lógica pura testable** ya hoy (sin red) y
+    DRY (una sola fuente para single-player y para el futuro MMO).
+  * Diseño dirigido por datos: añadir/ajustar una facción = editar un `.tres`.
+* **Negativas / Pendiente (TBD)**:
+  * `camp_capacity` y el set concreto de "habilidades extra" quedan a balance.
+  * Party en red, combate, habilidades y colonias siguen fuera de alcance
+    (fases futuras).

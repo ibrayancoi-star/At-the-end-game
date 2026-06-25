@@ -2,8 +2,8 @@
 
 Este documento define las especificaciones técnicas y de diseño para la mecánica de **Inestabilidad del Artefacto** (abreviado como *Trauma del Sistema*), la cual rige el funcionamiento y degradación de los dispositivos tecnológicos complejos de origen pre-colapso en el videojuego.
 
-## 1. El Glitch de Hardware por Memoria Volátil (RNG)
-Los artefactos avanzados no son simples herramientas inertes; contienen fragmentos de memoria volátil con subrutinas activas de la RNG. Al interactuar con el ambiente ionizado o al ser operados, estos fragmentos intentan ejecutar directivas contradictorias de la RNG, lo que provoca **glitches de hardware**.
+## 1. El Glitch de Hardware por Memoria Volátil (eco del Cisma)
+Los artefactos avanzados no son simples herramientas inertes; contienen fragmentos de memoria volátil con subrutinas activas heredadas de las IAs del **Cisma de la Sobreevolución** (el algoritmo emocional). Al interactuar con el ambiente ionizado o al ser operados, estos fragmentos intentan ejecutar **directivas emocionales contradictorias** de los dos bandos en guerra (Pacto y Resistencia), lo que provoca **glitches de hardware**. Ver [CAP_1_EMPATIA.md](../narrative/CAP_1_EMPATIA.md).
 
 ### Manifestación del Glitch:
 * **Desviación de Entrada (Input Drift)**: Comandos del jugador con retraso o ejecutados erróneamente de forma aleatoria (p. ej., un arma de energía que dispara con un retraso de 150ms).

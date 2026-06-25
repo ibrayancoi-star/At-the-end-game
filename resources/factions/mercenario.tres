@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="FactionData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://systems/factions/faction_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "mercenario"
+display_name = "Mercenarios"
+faction_type = 2
+is_main_faction = false
+base_skill = "combate"
+extra_skill_slots = 2
+camp_capacity = 12

@@ -13,12 +13,20 @@ extends Node
 ## Se emite cuando cambia el oro, para que la UI lo refleje.
 signal gold_changed(new_amount: int)
 
-## El inventario del jugador (lógica pura, ver scripts/systems/inventory.gd).
+## Se emite cuando el jugador elige/cambia de facción.
+signal faction_changed(new_faction: int)
+
+## El inventario del jugador (lógica pura, ver systems/inventory/inventory.gd).
 var inventory: Inventory
 
 ## Oro: nuestra moneda interna. De momento es solo una estructura básica;
 ## TODAVÍA SIN mercado (eso es de fases futuras, ver docs/ROADMAP.md).
 var gold: int = 0
+
+## Facción del jugador (valor de PartyRules.Faction; -1 = sin elegir todavía).
+## Solo IDENTIDAD por ahora: combate, habilidades y colonias son fases futuras.
+## La selección real se hará en la UI; de momento se fija con set_player_faction.
+var player_faction: int = -1
 
 
 func _ready() -> void:
@@ -42,3 +50,22 @@ func spend_gold(amount: int) -> bool:
 	gold -= amount
 	gold_changed.emit(gold)
 	return true
+
+
+## Fija la facción del jugador. Valida contra PartyRules.Faction.
+## Devuelve false (sin cambiar nada) si el valor no es una facción válida.
+func set_player_faction(faction: int) -> bool:
+	if faction < 0 or faction > PartyRules.Faction.MERCENARY:
+		push_error("GameState.set_player_faction: facción inválida %d." % faction)
+		return false
+	player_faction = faction
+	faction_changed.emit(player_faction)
+	return true
+
+
+## Devuelve el perfil (FactionData) de la facción del jugador, o null si no eligió.
+func get_player_faction_data() -> FactionData:
+	for f: FactionData in Database.all_factions():
+		if f.faction_type == player_faction:
+			return f
+	return null

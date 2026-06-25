@@ -11,17 +11,22 @@ extends Node
 
 const ITEMS_PATH := "res://resources/items/"
 const RECIPES_PATH := "res://resources/recipes/"
+const FACTIONS_PATH := "res://resources/factions/"
 
 # Diccionarios internos: id -> definición. El "_" inicial es una convención
 # para indicar "privado, no lo toques desde fuera; usa las funciones get_*".
 var _items: Dictionary = {}
 var _recipes: Dictionary = {}
+var _factions: Dictionary = {}
 
 
 func _ready() -> void:
 	_load_folder(ITEMS_PATH, _items)
 	_load_folder(RECIPES_PATH, _recipes)
-	print("Database lista: %d items, %d recetas." % [_items.size(), _recipes.size()])
+	_load_folder(FACTIONS_PATH, _factions)
+	print("Database lista: %d items, %d recetas, %d facciones." % [
+		_items.size(), _recipes.size(), _factions.size()
+	])
 
 
 ## Carga todos los .tres de una carpeta y los registra por su campo "id".
@@ -58,3 +63,13 @@ func get_recipe(id: String) -> RecipeData:
 ## Devuelve todas las recetas (útil para construir el menú de crafteo).
 func all_recipes() -> Array:
 	return _recipes.values()
+
+
+## Devuelve la definición de una facción por su id, o null si no existe.
+func get_faction(id: String) -> FactionData:
+	return _factions.get(id)
+
+
+## Devuelve todas las facciones (útil para la futura pantalla de selección).
+func all_factions() -> Array:
+	return _factions.values()

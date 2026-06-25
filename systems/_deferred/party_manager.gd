@@ -18,15 +18,11 @@ extends Node
 
 
 # =============================================================================
-# ENUMERADORES
+# FACCIONES
 # =============================================================================
-
-## Las 3 facciones del juego.
-enum Faction {
-	PACTO,       ## Facción hostil / "mala". 
-	RESISTENCIA, ## Facción cooperativa / "buena".
-	MERCENARY,   ## Neutral / independiente. Hasta 3 especialidades, penalizaciones en solitario.
-}
+# Las 3 facciones y las REGLAS de composición de party viven en PartyRules
+# (systems/party/party_rules.gd), fuente única compartida — ver ADR-004.
+# Este gestor solo añade la capa de RED (RPC) por encima de esas reglas puras.
 
 
 # =============================================================================
@@ -79,91 +75,8 @@ var _party_counter: int = 0
 ##   - allowed = true: el aspirante puede ingresar.
 ##   - allowed = false: se violaría el invariante; message explica por qué.
 func evaluate_projected_state(current_members: Array, applicant_faction: int) -> Dictionary:
-	var result: Dictionary = {"allowed": false, "message": ""}
-
-	# Validar que el enum de facción sea válido.
-	if applicant_faction < 0 or applicant_faction > Faction.MERCENARY:
-		result["message"] = "Facción del aspirante inválida: %d." % applicant_faction
-		push_error("PartyManager.evaluate_projected_state: %s" % result["message"])
-		return result
-
-	# Proyectar el estado futuro: miembros actuales + aspirante.
-	var projected: Array = current_members.duplicate()
-	projected.append({"id": -1, "faction": applicant_faction})  # id -1 = proyección.
-
-	var projected_size: int = projected.size()
-
-	# Contar facciones en el estado proyectado.
-	var count_pacto: int = 0
-	var count_resistencia: int = 0
-	var count_mercenary: int = 0
-
-	for member: Dictionary in projected:
-		var faction: int = member.get("faction", -1)
-		match faction:
-			Faction.PACTO:
-				count_pacto += 1
-			Faction.RESISTENCIA:
-				count_resistencia += 1
-			Faction.MERCENARY:
-				count_mercenary += 1
-			_:
-				result["message"] = "Miembro con facción desconocida: %d." % faction
-				push_error("PartyManager.evaluate_projected_state: %s" % result["message"])
-				return result
-
-	# =========================================================================
-	# REGLA 1: BLOQUEO ABSOLUTO DE COEXISTENCIA PACTO + RESISTENCIA
-	# =========================================================================
-	if count_pacto > 0 and count_resistencia > 0:
-		result["message"] = "BLOQUEO ABSOLUTO: PACTO y RESISTENCIA no pueden coexistir en la misma party. " + \
-			"(Proyección: %d PACTO, %d RESISTENCIA)" % [count_pacto, count_resistencia]
-		return result
-
-	# =========================================================================
-	# DETERMINAR TIPO DE PARTY Y LÍMITE
-	# =========================================================================
-	var party_type: String = ""
-	var max_size: int = 0
-
-	var has_faction: bool = (count_pacto > 0) or (count_resistencia > 0)
-	var has_mercenary: bool = count_mercenary > 0
-
-	if has_faction and has_mercenary:
-		# MIXTO: cualquier mezcla de una facción + mercenarios.
-		party_type = "MIXTA"
-		max_size = ConstantsCore.PARTY_MAX_MIXED
-	elif has_mercenary and not has_faction:
-		# PURO MERCENARIOS: solo mercenarios.
-		party_type = "PURO_MERCENARIO"
-		max_size = ConstantsCore.PARTY_MAX_PURE_MERCENARY
-	elif has_faction and not has_mercenary:
-		# PURO FACCIÓN: solo una facción (PACTO o RESISTENCIA).
-		party_type = "PURO_FACCION"
-		max_size = ConstantsCore.PARTY_MAX_PURE_FACTION
-	else:
-		# No debería ocurrir (party vacía + aspirante siempre tiene al menos 1).
-		result["message"] = "Error interno: no se pudo determinar tipo de party."
-		push_error("PartyManager.evaluate_projected_state: %s" % result["message"])
-		return result
-
-	# =========================================================================
-	# REGLA 2: VERIFICAR LÍMITE DE TAMAÑO
-	# =========================================================================
-	if projected_size > max_size:
-		result["message"] = "Party %s excedería el límite: %d/%d miembros." % [
-			party_type, projected_size, max_size
-		]
-		return result
-
-	# =========================================================================
-	# APROBADO
-	# =========================================================================
-	result["allowed"] = true
-	result["message"] = "Aprobado. Party %s: %d/%d miembros." % [
-		party_type, projected_size, max_size
-	]
-	return result
+	# Delega en la lógica pura compartida (DRY). Este gestor solo aporta la red.
+	return PartyRules.evaluate_projected_state(current_members, applicant_faction)
 
 
 # =============================================================================
